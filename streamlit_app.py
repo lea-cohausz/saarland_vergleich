@@ -52,26 +52,14 @@ def get_area(url):
 def clean_result(area):
     # Größe und Maßeinhei der Eintragung entnehmen.
     try:
-        area = area.replace(".", "")
-        area = area.replace(",", ".")
-        st.write(area)
-        for i in area.split():
+        area = area.replace(".", "") # in englisches System umwandeln
+        area = area.replace(",", ".") # in englisches System umwandeln
+        for i in area.split(): # versuche, jedes Element der aus dem String resultierenden Liste, in ein Float zu verwandeln
             try:
-                #trying to convert i to float
                 area_size = float(i)
-                st.write(area_size)
-                #break the loop if i is the first string that's successfully converted
-                break
+                break # höre auf damit, wenn es zum ersten Mal klappt (nimmt also immer die kleinste Angabe bei mehreren)
             except:
                 continue
-
-        #area = area.split()
-        #area_size = area[0].replace(".", "")
-        #area_size = area_size.replace(",", ".")
-        #area_size = float(area_size)
-        #area_size = float(area[0])
-        #area_measurement = area[-1]
-        st.write(area_size)
         if 'km²' in area:
             area_measurement = 'km²'
         elif 'm²' in area:
@@ -84,7 +72,6 @@ def clean_result(area):
 
 def compute_relation(area_size, area_measurement, saarland_groesse):
     if area_measurement == 'km²':
-        st.write(area_size)
         return area_size / saarland_groesse
     if area_measurement == 'm²':
         saarland_groesse_m2 = saarland_groesse * 1000000
@@ -93,7 +80,6 @@ def compute_relation(area_size, area_measurement, saarland_groesse):
         return area_size / saarland_groesse
         
 def create_response(relation):
-    st.write(relation)
     if relation < 1:
         st.write(f'Du hast etwas gefunden, das kleiner ist als das Saarland! {query} würde {round(1/relation, 2)} Mal ins Saarland passen.')
     elif relation > 1:
