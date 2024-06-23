@@ -7,7 +7,6 @@ import re
 saarland_groesse = 2569.69 # in km2
 url_base = "https://de.wikipedia.org/wiki/"
 
-flaeche = ""
 
 
 def check_fussball(query):
@@ -52,12 +51,13 @@ def get_area(url):
 
 
 def clean_result(area):
-    area = area.split()
-    area_size = area[0].replace(".", "")
-    area_size = area_size.replace(",", ".")
-    area_size = float(area_size)
-    area_measurement = area[-1]
-    return area_size, area_measurement
+    if area:
+        area = area.split()
+        area_size = area[0].replace(".", "")
+        area_size = area_size.replace(",", ".")
+        area_size = float(area_size)
+        area_measurement = area[-1]
+        return area_size, area_measurement
 
 def compute_relation(area_size, area_measurement, saarland_groesse):
     if area_measurement == 'km²':
