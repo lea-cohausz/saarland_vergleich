@@ -76,6 +76,8 @@ def clean_result(area):
             area_measurement = 'km²'
         elif 'm²' in area:
             area_measurement = 'm²'
+        else:
+            area_measurement = 'unknown'
         return area_size, area_measurement
     except:
         quit()
