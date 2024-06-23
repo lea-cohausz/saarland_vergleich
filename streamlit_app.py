@@ -61,7 +61,10 @@ def clean_result(area):
                 #break the loop if i is the first string that's successfully converted
                 break
             except:
-                continue
+                try:
+                    area_size = int(i)
+                except:
+                    continue
 
         #area = area.split()
         #area_size = area[0].replace(".", "")
