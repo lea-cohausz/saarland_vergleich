@@ -71,7 +71,7 @@ def clean_result(area):
         #area_size = float(area_size)
         #area_size = float(area[0])
         #area_measurement = area[-1]
-        print(area_size)
+        st.write(area_size)
         if 'km²' in area:
             area_measurement = 'km²'
         if 'm²' in area:
