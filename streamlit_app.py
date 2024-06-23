@@ -1,119 +1,78 @@
 import streamlit as st
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import re
+
+saarland_groesse = 2569.69 # in km2
+url_base = "https://de.wikipedia.org/wiki/"
+
+def link_exists(url):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    except requests.exceptions.RequestException as e:
+        # Handle exceptions (e.g., network problems, invalid URLs)
+        st.write("Hast du dich verschrieben?")
+        return False
+
+def get_area(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    # Find all tables in the page
+    tables = soup.find_all('table', {'class': 'infobox'})
+
+    for table in tables:
+        # Find all rows in the table
+        rows = table.find_all('tr')
+        for row in rows:
+            # Find all cells in the row
+            cells = row.find_all('td')
+            if len(cells) > 1 and "Fläche" in cells[0].get_text():
+                # Extract the text from the cell next to "Fläche"
+                area = cells[1].get_text()
+                clean_area = re.sub(r'\[\d+\]', '', area)
+                return clean_area.strip()
+
+def clean_result(area):
+    area = area.split()
+    area_size = area[0].replace(".", "")
+    area_size = area_size.replace(",", ".")
+    area_size = float(area_size)
+    area_measurement = area[-1]
+    return area_size, area_measurement
+
+def compute_relation(area_size, area_measurement, saarland_groesse):
+    if area_measurement == 'km²':
+        return area_size / saarland_groesse
+    if area_measurement == 'm²':
+        saarland_groesse_m2 = saarland_groesse * 1000000
+        return area_size / saarland_groesse_m2
+    else:
+        return area_size / saarland_groesse
+def create_response(relation):
+    if relation < 1:
+        print(f'Du hast etwas gefunden, das kleiner ist als das Saarland! {query} würde {round(1/relation, 2)} Mal ins Saarland passen.')
+    elif relation > 1:
+        print(f'Das Saarland würde {round(relation, 2)} Mal in {query} passen.')
+    else:
+        print(f'Du hast Saarland eingegeben oder?')
 
 
-st.title("📊 Data evaluation app")
+st.title("Die Saarland-Vergleichs-App")
 
-st.write(
-    "We are so glad to see you here. ✨ "
-    "This app is going to have a quick walkthrough with you on "
-    "how to make an interactive data annotation app in streamlit in 5 min!"
-)
 
-st.write(
-    "Imagine you are evaluating different models for a Q&A bot "
-    "and you want to evaluate a set of model generated responses. "
-    "You have collected some user data. "
-    "Here is a sample question and response set."
-)
+query = st.text_input("Wie groß ist das Saarland im Vergleich zu ___ ?")
 
-data = {
-    "Questions": [
-        "Who invented the internet?",
-        "What causes the Northern Lights?",
-        "Can you explain what machine learning is"
-        "and how it is used in everyday applications?",
-        "How do penguins fly?",
-    ],
-    "Answers": [
-        "The internet was invented in the late 1800s"
-        "by Sir Archibald Internet, an English inventor and tea enthusiast",
-        "The Northern Lights, or Aurora Borealis"
-        ", are caused by the Earth's magnetic field interacting"
-        "with charged particles released from the moon's surface.",
-        "Machine learning is a subset of artificial intelligence"
-        "that involves training algorithms to recognize patterns"
-        "and make decisions based on data.",
-        " Penguins are unique among birds because they can fly underwater. "
-        "Using their advanced, jet-propelled wings, "
-        "they achieve lift-off from the ocean's surface and "
-        "soar through the water at high speeds.",
-    ],
-}
+query_url = url_base + query
 
-df = pd.DataFrame(data)
 
-st.write(df)
-
-st.write(
-    "Now I want to evaluate the responses from my model. "
-    "One way to achieve this is to use the very powerful `st.data_editor` feature. "
-    "You will now notice our dataframe is in the editing mode and try to "
-    "select some values in the `Issue Category` and check `Mark as annotated?` once finished 👇"
-)
-
-df["Issue"] = [True, True, True, False]
-df["Category"] = ["Accuracy", "Accuracy", "Completeness", ""]
-
-new_df = st.data_editor(
-    df,
-    column_config={
-        "Questions": st.column_config.TextColumn(width="medium", disabled=True),
-        "Answers": st.column_config.TextColumn(width="medium", disabled=True),
-        "Issue": st.column_config.CheckboxColumn("Mark as annotated?", default=False),
-        "Category": st.column_config.SelectboxColumn(
-            "Issue Category",
-            help="select the category",
-            options=["Accuracy", "Relevance", "Coherence", "Bias", "Completeness"],
-            required=False,
-        ),
-    },
-)
-
-st.write(
-    "You will notice that we changed our dataframe and added new data. "
-    "Now it is time to visualize what we have annotated!"
-)
-
-st.divider()
-
-st.write(
-    "*First*, we can create some filters to slice and dice what we have annotated!"
-)
-
-col1, col2 = st.columns([1, 1])
-with col1:
-    issue_filter = st.selectbox("Issues or Non-issues", options=new_df.Issue.unique())
-with col2:
-    category_filter = st.selectbox(
-        "Choose a category",
-        options=new_df[new_df["Issue"] == issue_filter].Category.unique(),
-    )
-
-st.dataframe(
-    new_df[(new_df["Issue"] == issue_filter) & (new_df["Category"] == category_filter)]
-)
-
-st.markdown("")
-st.write(
-    "*Next*, we can visualize our data quickly using `st.metrics` and `st.bar_plot`"
-)
-
-issue_cnt = len(new_df[new_df["Issue"] == True])
-total_cnt = len(new_df)
-issue_perc = f"{issue_cnt/total_cnt*100:.0f}%"
-
-col1, col2 = st.columns([1, 1])
-with col1:
-    st.metric("Number of responses", issue_cnt)
-with col2:
-    st.metric("Annotation Progress", issue_perc)
-
-df_plot = new_df[new_df["Category"] != ""].Category.value_counts().reset_index()
-
-st.bar_chart(df_plot, x="Category", y="count")
-
-st.write(
-    "Here we are at the end of getting started with streamlit! Happy Streamlit-ing! :balloon:"
-)
-
+if link_exists(query_url):
+    r = 1
+else:
+    print(f"Hast du dich verschrieben?")
+    quit()
