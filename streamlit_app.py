@@ -82,6 +82,7 @@ def clean_result(area):
 
 def compute_relation(area_size, area_measurement, saarland_groesse):
     if area_measurement == 'km²':
+        st.write(area_size)
         return area_size / saarland_groesse
     if area_measurement == 'm²':
         saarland_groesse_m2 = saarland_groesse * 1000000
@@ -90,6 +91,7 @@ def compute_relation(area_size, area_measurement, saarland_groesse):
         return area_size / saarland_groesse
         
 def create_response(relation):
+    st.write(relation)
     if relation < 1:
         st.write(f'Du hast etwas gefunden, das kleiner ist als das Saarland! {query} würde {round(1/relation, 2)} Mal ins Saarland passen.')
     elif relation > 1:
