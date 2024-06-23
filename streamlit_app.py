@@ -52,9 +52,13 @@ def get_area(url):
 def clean_result(area):
     # Größe und Maßeinhei der Eintragung entnehmen.
     try:
+        st.write(area)
         area = area.replace(".", "")
+        st.write(area)
         area = area.replace(",", ".")
+        st.write(area)
         matches = re.findall("[+-]?\d+\.\d+", area)
+        st.write(matches)
         area_size = float(matches[0])
         #area = area.split()
         #area_size = area[0].replace(".", "")
