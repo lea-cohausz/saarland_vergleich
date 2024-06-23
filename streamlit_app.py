@@ -58,6 +58,8 @@ def clean_result(area):
         area = area.replace(",", ".")
         st.write(area)
         matches = re.findall("[+-]?\d+\.\d+", area)
+        if not matches:
+            matches = re.findall("[+-]?\d+\", area)
         st.write(matches)
         area_size = float(matches[0])
         #area = area.split()
