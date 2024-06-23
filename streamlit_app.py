@@ -4,15 +4,18 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
+# fest zugewiesen
 saarland_groesse = 2569.69 # in km2
 url_base = "https://de.wikipedia.org/wiki/"
 
+# Funktionen
 
-
+# zu erwartende Frage, die nicht mit Wikipedia beantwortet werden kann
 def check_fussball(query):
     if query == "Fußballfeld" or query == "Fussballfeld":
         return True
 
+# Schauen, ob es das auf Wikipedia gibt
 def link_exists(url):
     try:
         response = requests.get(url)
@@ -21,26 +24,22 @@ def link_exists(url):
         else:
             return False
     except requests.exceptions.RequestException as e:
-        # Handle exceptions (e.g., network problems, invalid URLs)
         st.write("Hast du dich verschrieben? Wenn nicht, dann kenne ich hierzu kein Ergebnis.")
         return False
 
+# Die Fläche wird aus der Beschreibungstabelle von Wikipedia entnommen.
 def get_area(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
-
-    # Find all tables in the page
+    # Infobox
     tables = soup.find_all('table', {'class': 'infobox'})
 
     for table in tables:
-        # Find all rows in the table
-        rows = table.find_all('tr')
+        rows = table.find_all('tr') # alle Zeilen
         flaeche_any = False
-        for row in rows:
-            # Find all cells in the row
-            cells = row.find_all('td')
+        for row in rows: # alle Einträge
+            cells = row.find_all('td') # alle Einträge
             if len(cells) > 1 and "Fläche" in cells[0].get_text():
-                # Extract the text from the cell next to "Fläche"
                 flaeche_any = True
                 area = cells[1].get_text()
                 clean_area = re.sub(r'\[\d+\]', '', area)
@@ -51,11 +50,15 @@ def get_area(url):
 
 
 def clean_result(area):
+    # Größe und Maßeinhei der Eintragung entnehmen.
     try:
+        area = area.replace(".", "")
+        area = area.replace(",", ".")
         area = area.split()
-        area_size = area[0].replace(".", "")
-        area_size = area_size.replace(",", ".")
-        area_size = float(area_size)
+        #area_size = area[0].replace(".", "")
+        #area_size = area_size.replace(",", ".")
+        #area_size = float(area_size)
+        area_size = float(area[0])
         area_measurement = area[-1]
         return area_size, area_measurement
     except:
