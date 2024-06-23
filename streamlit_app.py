@@ -56,11 +56,11 @@ def compute_relation(area_size, area_measurement, saarland_groesse):
         return area_size / saarland_groesse
 def create_response(relation):
     if relation < 1:
-        print(f'Du hast etwas gefunden, das kleiner ist als das Saarland! {query} würde {round(1/relation, 2)} Mal ins Saarland passen.')
+        st.write(f'Du hast etwas gefunden, das kleiner ist als das Saarland! {query} würde {round(1/relation, 2)} Mal ins Saarland passen.')
     elif relation > 1:
-        print(f'Das Saarland würde {round(relation, 2)} Mal in {query} passen.')
+        st.write(f'Das Saarland würde {round(relation, 2)} Mal in {query} passen.')
     else:
-        print(f'Du hast Saarland eingegeben oder?')
+        st.write(f'Du hast Saarland eingegeben oder?')
 
 
 st.title("Die Saarland-Vergleichs-App")
@@ -74,5 +74,11 @@ query_url = url_base + query
 if link_exists(query_url):
     r = 1
 else:
-    print(f"Hast du dich verschrieben?")
-    quit()
+    st.write("Hast du dich verschrieben?")
+    #quit()
+    
+flaeche = get_area(query_url)
+groesse, masseinheit = clean_result(flaeche)
+
+relation = compute_relation(groesse, masseinheit, saarland_groesse)
+create_response(relation)
