@@ -1,6 +1,6 @@
 # Die Saarland-Vergleichs-App
 
-Für alle die Male, bei denen man sich fragt: Wie groß ist das eigentlich im Verhältmis zum Saarland?
+Für alle die Male, bei denen man sich fragt: Wie groß ist das eigentlich im Verhältnis zum Saarland?
 
 [Öffne die App in Streamlit](https://saarlandvergleich-2dwjpuiu5c.streamlit.app)
 
