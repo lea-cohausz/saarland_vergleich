@@ -1,19 +1,18 @@
-# 📊 Data evaluation template
+# Die Saarland-Vergleichs-App
 
-A simple Streamlit app showing how to evaluate and annotate data, using dataframes
-and charts. 
+Für alle die Male, bei denen man sich fragt: Wie groß ist das eigentlich im Verhältmis zum Saarland?
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://data-evaluation-template.streamlit.app/)
+[![Öffne die App in Streamlit](https://saarlandvergleich-2dwjpuiu5c.streamlit.app)]
 
-### How to run it on your own machine
+### Um das Programm lokal laufen zu lassen, downloade das Repository.
 
-1. Install the requirements
+1. Installiere die Requirements
 
    ```
    $ pip install -r requirements.txt
    ```
 
-2. Run the app
+2. Lass die App laufen.
 
    ```
    $ streamlit run streamlit_app.py
