@@ -7,6 +7,10 @@ import re
 saarland_groesse = 2569.69 # in km2
 url_base = "https://de.wikipedia.org/wiki/"
 
+def check_fussball(query):
+    if query == "Fußballfeld" or query == "Fussballfeld":
+        return True
+
 def link_exists(url):
     try:
         response = requests.get(url)
@@ -16,7 +20,7 @@ def link_exists(url):
             return False
     except requests.exceptions.RequestException as e:
         # Handle exceptions (e.g., network problems, invalid URLs)
-        st.write("Hast du dich verschrieben?")
+        st.write("Hast du dich verschrieben? Wenn nicht, dann kenne ich hierzu kein Ergebnis.")
         return False
 
 def get_area(url):
@@ -37,6 +41,8 @@ def get_area(url):
                 area = cells[1].get_text()
                 clean_area = re.sub(r'\[\d+\]', '', area)
                 return clean_area.strip()
+            else:
+                st.write("Hierzu kenne ich keine Flächenangabe.")
 
 def clean_result(area):
     area = area.split()
@@ -68,16 +74,20 @@ st.title("Die Saarland-Vergleichs-App")
 
 query = st.text_input("Wie groß ist das Saarland im Vergleich zu ___ ?")
 
-query_url = url_base + query
-
-if link_exists(query_url):
-    r = 1
+if check_fussball(query) == True:
+    groesse = 0.00714
+    masseinheit = "km²"
 else:
-    st.write("Hast du dich verschrieben?")
-    #quit()
+    query_url = url_base + query
+
+    if link_exists(query_url):
+        r = 1
+    else:
+        st.write("Hast du dich verschrieben? Wenn nicht, dann kenne ich hierzu kein Ergebnis.")
+        #quit()
     
-flaeche = get_area(query_url)
-groesse, masseinheit = clean_result(flaeche)
+    flaeche = get_area(query_url)
+    groesse, masseinheit = clean_result(flaeche)
 
 relation = compute_relation(groesse, masseinheit, saarland_groesse)
 create_response(relation)
