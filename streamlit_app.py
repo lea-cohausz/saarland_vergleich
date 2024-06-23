@@ -44,7 +44,7 @@ def get_area(url):
                 clean_area = re.sub(r'\[\d+\]', '', area)
                 return clean_area.strip()
         if flaeche_any == False:
-           st.write("Hierzu kenne ich keine Flächenangabe.")
+            st.write("Hierzu kenne ich keine Flächenangabe.")
             quit()
 
 
