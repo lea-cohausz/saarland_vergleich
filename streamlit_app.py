@@ -51,13 +51,15 @@ def get_area(url):
 
 
 def clean_result(area):
-    if area:
+    try:
         area = area.split()
         area_size = area[0].replace(".", "")
         area_size = area_size.replace(",", ".")
         area_size = float(area_size)
         area_measurement = area[-1]
         return area_size, area_measurement
+    except:
+        quit()
 
 def compute_relation(area_size, area_measurement, saarland_groesse):
     if area_measurement == 'km²':
