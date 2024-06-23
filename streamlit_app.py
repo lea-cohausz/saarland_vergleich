@@ -74,7 +74,7 @@ def clean_result(area):
         st.write(area_size)
         if 'km²' in area:
             area_measurement = 'km²'
-        if 'm²' in area:
+        elif 'm²' in area:
             area_measurement = 'm²'
         return area_size, area_measurement
     except:
