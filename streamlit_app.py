@@ -33,14 +33,19 @@ def get_area(url):
     for table in tables:
         # Find all rows in the table
         rows = table.find_all('tr')
+        flaeche_any = False
         for row in rows:
             # Find all cells in the row
             cells = row.find_all('td')
             if len(cells) > 1 and "Fläche" in cells[0].get_text():
                 # Extract the text from the cell next to "Fläche"
+                flaeche_any = True
                 area = cells[1].get_text()
                 clean_area = re.sub(r'\[\d+\]', '', area)
                 return clean_area.strip()
+        if flaeche_any == False:
+           st.write("Hierzu kenne ich keine Flächenangabe.")
+            quit()
 
 
 def clean_result(area):
