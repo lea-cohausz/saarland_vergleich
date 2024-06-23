@@ -7,6 +7,9 @@ import re
 saarland_groesse = 2569.69 # in km2
 url_base = "https://de.wikipedia.org/wiki/"
 
+flaeche = ""
+
+
 def check_fussball(query):
     if query == "Fußballfeld" or query == "Fussballfeld":
         return True
@@ -49,13 +52,12 @@ def get_area(url):
 
 
 def clean_result(area):
-    if area:
-        area = area.split()
-        area_size = area[0].replace(".", "")
-        area_size = area_size.replace(",", ".")
-        area_size = float(area_size)
-        area_measurement = area[-1]
-        return area_size, area_measurement
+    area = area.split()
+    area_size = area[0].replace(".", "")
+    area_size = area_size.replace(",", ".")
+    area_size = float(area_size)
+    area_measurement = area[-1]
+    return area_size, area_measurement
 
 def compute_relation(area_size, area_measurement, saarland_groesse):
     if area_measurement == 'km²':
@@ -65,6 +67,7 @@ def compute_relation(area_size, area_measurement, saarland_groesse):
         return area_size / saarland_groesse_m2
     else:
         return area_size / saarland_groesse
+        
 def create_response(relation):
     if relation < 1:
         st.write(f'Du hast etwas gefunden, das kleiner ist als das Saarland! {query} würde {round(1/relation, 2)} Mal ins Saarland passen.')
