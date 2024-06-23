@@ -78,7 +78,7 @@ st.title("Die Saarland-Vergleichs-App")
 
 query = st.text_input("Wie groß ist das Saarland im Vergleich zu ___ ?")
 
-if query == "":
+if not isinstance(query):
     quit()
     
 if check_fussball(query) == True:
