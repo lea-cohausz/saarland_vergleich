@@ -54,12 +54,18 @@ def clean_result(area):
     try:
         area = area.replace(".", "")
         area = area.replace(",", ".")
-        area = area.split()
+        matches = re.findall("[+-]?\d+\.\d+", area)
+        area_size = float(matches[0])
+        #area = area.split()
         #area_size = area[0].replace(".", "")
         #area_size = area_size.replace(",", ".")
         #area_size = float(area_size)
-        area_size = float(area[0])
-        area_measurement = area[-1]
+        #area_size = float(area[0])
+        #area_measurement = area[-1]
+        if 'km²' in area:
+            area_measurement = 'km²'
+        if 'm²' in area:
+            area_measurement = 'm²'
         return area_size, area_measurement
     except:
         quit()
