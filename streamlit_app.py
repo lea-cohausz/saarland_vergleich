@@ -49,12 +49,13 @@ def get_area(url):
 
 
 def clean_result(area):
-    area = area.split()
-    area_size = area[0].replace(".", "")
-    area_size = area_size.replace(",", ".")
-    area_size = float(area_size)
-    area_measurement = area[-1]
-    return area_size, area_measurement
+    if area:
+        area = area.split()
+        area_size = area[0].replace(".", "")
+        area_size = area_size.replace(",", ".")
+        area_size = float(area_size)
+        area_measurement = area[-1]
+        return area_size, area_measurement
 
 def compute_relation(area_size, area_measurement, saarland_groesse):
     if area_measurement == 'km²':
@@ -78,8 +79,6 @@ st.title("Die Saarland-Vergleichs-App")
 
 query = st.text_input("Wie groß ist das Saarland im Vergleich zu ___ ?")
 
-if not isinstance(query):
-    quit()
     
 if check_fussball(query) == True:
     groesse = 0.00714
