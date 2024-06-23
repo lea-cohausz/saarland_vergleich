@@ -78,6 +78,9 @@ st.title("Die Saarland-Vergleichs-App")
 
 query = st.text_input("Wie groß ist das Saarland im Vergleich zu ___ ?")
 
+if query == "":
+    quit()
+    
 if check_fussball(query) == True:
     groesse = 0.00714
     masseinheit = "km²"
