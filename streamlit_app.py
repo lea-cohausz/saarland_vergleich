@@ -54,15 +54,19 @@ def clean_result(area):
     try:
         area = area.replace(".", "")
         area = area.replace(",", ".")
+        st.write(area)
         for i in s.split():
             try:
                 #trying to convert i to float
                 area_size = float(i)
+                st.write("True I")
                 #break the loop if i is the first string that's successfully converted
                 break
             except:
                 try:
                     area_size = int(i)
+                    area_size = float(area_size)
+                    st.write("True II")
                 except:
                     continue
 
