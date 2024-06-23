@@ -41,8 +41,7 @@ def get_area(url):
                 area = cells[1].get_text()
                 clean_area = re.sub(r'\[\d+\]', '', area)
                 return clean_area.strip()
-            else:
-                st.write("Hierzu kenne ich keine Flächenangabe.")
+
 
 def clean_result(area):
     area = area.split()
