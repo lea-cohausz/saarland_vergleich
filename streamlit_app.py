@@ -55,7 +55,7 @@ def clean_result(area):
         area = area.replace(".", "")
         area = area.replace(",", ".")
         st.write(area)
-        for i in s.split():
+        for i in area.split():
             try:
                 #trying to convert i to float
                 area_size = float(i)
