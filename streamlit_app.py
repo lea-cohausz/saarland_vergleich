@@ -70,7 +70,6 @@ query = st.text_input("Wie groß ist das Saarland im Vergleich zu ___ ?")
 
 query_url = url_base + query
 
-st.write(query)
 if link_exists(query_url):
     r = 1
 else:
@@ -81,5 +80,4 @@ flaeche = get_area(query_url)
 groesse, masseinheit = clean_result(flaeche)
 
 relation = compute_relation(groesse, masseinheit, saarland_groesse)
-st.write(relation)
 create_response(relation)
